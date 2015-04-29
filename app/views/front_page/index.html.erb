@@ -1,0 +1,26 @@
+<%= javascript_include_tag 'impulse.min'%>
+
+<% if current_user %>
+  <p>Logged In!</p>
+<% else %>
+  <div class="main_content centered">
+    <br/>
+    <p style="font-size:111px" id="main_title">Overthrow</p>
+  </div>
+
+  <script type="text/javascript">
+    var title = $('#main_title');
+    var position = title.position();
+    var titleImpulse = Impulse(title)
+      .style('translate', function(x, y) {
+        return x + 'px, ' + y + 'px'
+      });
+    var x = position.left;
+    var y = position.top;
+
+    titleImpulse.drag()
+      .on('end', function() {
+        titleImpulse.spring().to(0, 0).start()
+      });
+  </script>
+<% end %>
