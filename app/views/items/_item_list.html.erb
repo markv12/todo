@@ -1,0 +1,15 @@
+  <script>
+    var app = angular.module('items', []);
+
+    app.controller('ItemController', ['$http', function ($http) {
+      this.todo_items = <%= todo_items.to_json.html_safe %>;
+      this.habit_items = <%= habit_items.to_json.html_safe %>
+    }]);
+  </script>
+  <div ng-app="items">
+    <div ng-controller="ItemController as Items">
+      <p ng-repeat="todo in Items.todo_items">
+        {{todo.title}}
+      </p>
+    </div>
+  </div>

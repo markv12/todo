@@ -11,10 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428232325) do
+ActiveRecord::Schema.define(version: 20151015025202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "habit_items", force: true do |t|
+    t.integer  "user_id"
+    t.text     "title"
+    t.text     "description"
+    t.string   "unit_name"
+    t.decimal  "daily_amount",         precision: 10, scale: 3
+    t.decimal  "amount_remaining",     precision: 10, scale: 3
+    t.datetime "last_amount_increase"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "todo_items", force: true do |t|
+    t.integer  "user_id"
+    t.text     "title"
+    t.text     "description"
+    t.boolean  "completed",    default: false
+    t.datetime "completed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "user_sessions", force: true do |t|
     t.string   "session_id", null: false

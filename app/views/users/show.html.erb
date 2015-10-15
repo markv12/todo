@@ -1,5 +1,5 @@
 <span class="centered">
   <h2>Hello <%=h @user.name %></h2>
   <br>
-  <%= render partial:'menu', locals: {user: @user} %>
+  <%= render partial:'/items/item_list', locals: {todo_items: @user.todo_items, habit_items: @user.habit_items} %>
 </span>

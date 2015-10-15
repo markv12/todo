@@ -31,6 +31,7 @@ gem 'unicorn'
 gem 'rails_12factor'
 gem 'authlogic'
 gem 'foundation-rails'
+gem 'angularjs-rails'
 
 group :test, :development do
   gem 'pry'
