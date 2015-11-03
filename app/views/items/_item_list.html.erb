@@ -1,15 +1,52 @@
   <script>
-    var app = angular.module('items', []);
+    var app = angular.module('Items', []);
 
     app.controller('ItemController', ['$http', function ($http) {
       this.todo_items = <%= todo_items.to_json.html_safe %>;
-      this.habit_items = <%= habit_items.to_json.html_safe %>
+
+      this.habit_items = <%= habit_items.to_json.html_safe %>;
+      this.new_todo_item = {};
+
+      this.updateTodo = updateTodo;
+      this.addTodo = addTodo;
+      this.deleteTodo = deleteTodo;
+
+      function updateTodo(todo){
+        $http.put("todo_item/"+todo.id, {completed: todo.completed});
+      }
+      function addTodo(){
+        $http.post("todo_item",
+          {
+            title: this.new_todo_item.title,
+            description: this.new_todo_item.description,
+            authenticity_token: '<%= form_authenticity_token %>'
+          });
+      }
+      function deleteTodo(todo){
+        $http.delete("/todo_item/"+todo.id);
+      }
     }]);
   </script>
-  <div ng-app="items">
-    <div ng-controller="ItemController as Items">
-      <p ng-repeat="todo in Items.todo_items">
-        {{todo.title}}
-      </p>
+  <div ng-app="Items">
+    <div ng-controller="ItemController as vm">
+      <div class="large-8 columns large-centered" style="text-align:left">
+        <div class="panel">
+          <p ng-repeat="todo in vm.todo_items">
+            {{todo.title}} <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)">&nbsp;&nbsp;<a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
+          </p>
+        </div>
+      </div>
+      <div class="large-8 columns large-centered">
+        <div class="panel">
+          <h5>Add New Todo</h5>
+          <form class="input-group" style="text-align:left">
+            <label>Title:</label>
+            <input ng-model="vm.new_todo_item.title" type="text">
+            <label>Description</label>
+            <textarea ng-model="vm.new_todo_item.description" type="text"></textarea>
+          </form>
+          <a href="#" ng-click="vm.addTodo()" class="button">Add</a>
+        </div>
+      </div>
     </div>
   </div>

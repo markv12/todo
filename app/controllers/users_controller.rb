@@ -6,8 +6,6 @@ class UsersController < ApplicationController
 
   def show
     @user = current_user
-    @todo_items = current_user.todo_items
-    @habit_items = current_user.habit_items
   end
 
   def new
