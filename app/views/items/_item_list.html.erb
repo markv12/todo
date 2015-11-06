@@ -1,42 +1,53 @@
   <script>
-    var app = angular.module('Items', []);
+    (function () {
+      'use strict';
+      var app = angular.module('Items', []);
+      app.controller('ItemController', ItemController);
+      ItemController.$inject = ['$http'];
+      function ItemController($http) {
+        var vm = this;
+        vm.todo_items = <%= todo_items.to_json.html_safe %>;
 
-    app.controller('ItemController', ['$http', function ($http) {
-      this.todo_items = <%= todo_items.to_json.html_safe %>;
+        vm.habit_items = <%= habit_items.to_json.html_safe %>;
+        vm.new_todo_item = {};
 
-      this.habit_items = <%= habit_items.to_json.html_safe %>;
-      this.new_todo_item = {};
+        vm.updateTodo = updateTodo;
+        vm.addTodo = addTodo;
+        vm.deleteTodo = deleteTodo;
 
-      this.updateTodo = updateTodo;
-      this.addTodo = addTodo;
-      this.deleteTodo = deleteTodo;
-
-      function updateTodo(todo){
-        $http.put("todo_item/"+todo.id, {completed: todo.completed});
-      }
-      function addTodo(){
-        $http.post("todo_item",
-          {
-            title: this.new_todo_item.title,
-            description: this.new_todo_item.description,
-            authenticity_token: '<%= form_authenticity_token %>'
+        function updateTodo(todo){
+          $http.put("todo_item/"+todo.id, {completed: todo.completed});
+        }
+        function addTodo(){
+          var requestBody = {
+              title: vm.new_todo_item.title,
+              description: vm.new_todo_item.description,
+              authenticity_token: '<%= form_authenticity_token %>'
+            };
+          $http.post("todo_item", requestBody).then(function(response){
+              vm.todo_items.push(response.data);
+              vm.new_todo_item = {};
+            });
+        }
+        function deleteTodo(todo_to_delete){
+          $http.delete("/todo_item/"+todo_to_delete.id).then(function(response){
+            vm.todo_items = vm.todo_items.filter(function(item){
+              console.log(item.id !== response.data.id);
+              return item.id !== response.data.id;
+            });
           });
-      }
-      function deleteTodo(todo){
-        $http.delete("/todo_item/"+todo.id);
-      }
-    }]);
+        }
+      };
+    })();
   </script>
   <div ng-app="Items">
     <div ng-controller="ItemController as vm">
-      <div class="large-8 columns large-centered" style="text-align:left">
-        <div class="panel">
+      <div class="large-6 columns">
+        <div class="panel" style="text-align:left">
           <p ng-repeat="todo in vm.todo_items">
             {{todo.title}} <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)">&nbsp;&nbsp;<a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
           </p>
         </div>
-      </div>
-      <div class="large-8 columns large-centered">
         <div class="panel">
           <h5>Add New Todo</h5>
           <form class="input-group" style="text-align:left">
@@ -46,6 +57,11 @@
             <textarea ng-model="vm.new_todo_item.description" type="text"></textarea>
           </form>
           <a href="#" ng-click="vm.addTodo()" class="button">Add</a>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="panel">
+          Habits
         </div>
       </div>
     </div>

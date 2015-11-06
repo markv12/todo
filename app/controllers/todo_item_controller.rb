@@ -3,7 +3,7 @@ class TodoItemController < ApplicationController
   def create
     item = current_user.todo_items.new(todo_params)
     if item.save()
-      render :nothing => true, :status => 200, :content_type => 'text/html'
+      render json: item, :status => 200, :content_type => 'text/html'
     else
       render :nothing => true, :status => 403, :content_type => 'text/html'
     end
@@ -21,7 +21,7 @@ class TodoItemController < ApplicationController
   def delete
     item = TodoItem.find(params[:id])
     if item.destroy
-      render :nothing => true, :status => 200, :content_type => 'text/html'
+      render json: item, :status => 200, :content_type => 'text/html'
     else
       render :nothing => true, :status => 500, :content_type => 'text/html'
     end
