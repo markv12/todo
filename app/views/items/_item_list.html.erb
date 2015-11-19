@@ -44,7 +44,7 @@
     <div ng-controller="ItemController as vm">
       <div class="large-6 columns">
         <div class="panel" style="text-align:left">
-          <p ng-repeat="todo in vm.todo_items">
+          <p ng-repeat="todo in vm.todo_items | orderBy:'-created_at'">
             {{todo.title}} <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)">&nbsp;&nbsp;<a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
           </p>
         </div>
