@@ -16,6 +16,11 @@
 
  */
 
+hr{
+   margin-bottom: 9px;
+   margin-top: 10px;
+}
+
  #LoggedInIndicator{
    font-size: 12px;
    text-align:left;
