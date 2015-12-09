@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require foundation
 //= require angular
+//= require angular-mm-foundation-tpls
 //= require_tree .
 
 $(function(){ $(document).foundation(); });

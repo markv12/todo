@@ -1,0 +1,110 @@
+(function () {
+      'use strict';
+      var app = angular.module('Items', ['mm.foundation', 'ItemModal']);
+      app.controller('ItemController', ItemController);
+      ItemController.$inject = ['$http', '$modal'];
+      function ItemController($http, $modal) {
+        var vm = this;
+        vm.todo_items = <%= todo_items.to_json.html_safe %>;
+
+        vm.habit_items = <%= habit_items.to_json.html_safe %>;
+        vm.new_todo_item = {};
+
+        vm.updateTodo = updateTodo;
+        vm.addTodo = addTodo;
+        vm.deleteTodo = deleteTodo;
+        vm.scheduleTodo = scheduleTodo;
+
+        function updateTodo(todo){
+          $http.put("todo_item/"+todo.id, {completed: todo.completed});
+        }
+        function addTodo(){
+          var requestBody = {
+              title: vm.new_todo_item.title,
+              description: vm.new_todo_item.description,
+              authenticity_token: '<%= form_authenticity_token %>'
+            };
+          $http.post("todo_item", requestBody).then(function(response){
+              vm.todo_items.push(response.data);
+              vm.new_todo_item = {};
+            });
+        }
+        function deleteTodo(todo_to_delete){
+          $http.delete("/todo_item/"+todo_to_delete.id).then(function(response){
+            vm.todo_items = vm.todo_items.filter(function(item){
+              return item.id !== response.data.id;
+            });
+          });
+        }
+
+        function scheduleTodo(todo_to_schedule){
+          var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'modal.html',
+                controller: 'CalendarModalController',
+                backdrop: false,
+                windowClass:"small",
+                resolve: {
+                  item: function () {
+                    return todo_to_schedule;
+                  }
+                }
+              });
+
+          modalInstance.result.then(function (selectedItem) {
+                console.log(selectedItem);
+                // //secret DpNP4KhvwjLstcP8i-OTfKB8
+                // var clientId = '976525523411-msu9ft0cmibf5ulf4r2rrfvqvj1iatsq.apps.googleusercontent.com';
+                // var apiKey = 'AIzaSyDjaMTmqnhVGQnkHisPYccnmIlVyyNJ68o';
+                // var scopes = 'https://www.googleapis.com/auth/calendar';
+                // gapi.client.setApiKey(apiKey);
+                // window.setTimeout(checkAuth,1);
+                // function checkAuth() {
+                //   gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false},
+                //       handleAuthResult);
+                // }
+                // function handleAuthResult(authResult) {
+                //   if (authResult) {
+                //     addToCalendar(todo_to_schedule);
+                //   }
+                // }
+
+                // function addToCalendar(todo_to_schedule) {
+                //   gapi.client.load('calendar', 'v3', function() {
+                //     var event = {
+                //       'summary': todo_to_schedule.title,
+                //       'location': 'My Place',
+                //       'description': 'A chance to hear more about Google\'s developer products.',
+                //       'start': {
+                //         'dateTime': '2015-11-30T09:00:00-07:00',
+                //         'timeZone': 'America/Los_Angeles'
+                //       },
+                //       'end': {
+                //         'dateTime': '2015-11-30T17:00:00-07:00',
+                //         'timeZone': 'America/Los_Angeles'
+                //       },
+                //       'attendees': [
+                //         {'email': 'swsteffes@gmail.com'}
+                //       ],
+                //       'reminders': {
+                //         'useDefault': false
+                //       }
+                //     };
+                //     var request = gapi.client.calendar.events.insert({
+                //       'calendarId': 'primary',
+                //       'resource': event
+                //     });
+                //     request.execute(function(resp) {
+                //       debugger;
+                //       if(resp.status === 'confirmed'){
+
+                //       }
+                //     });
+                //   });
+                // }
+              }, function () {
+                console.log(selectedItem);
+              });
+        }
+      };
+    })();

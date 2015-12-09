@@ -32,6 +32,7 @@ gem 'rails_12factor'
 gem 'authlogic'
 gem 'foundation-rails'
 gem 'angularjs-rails'
+gem 'angularjs-foundation-rails'
 
 group :test, :development do
   gem 'pry'
