@@ -1,6 +1,6 @@
   <script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
   <script>
-    <%= render :partial => "items/item_controller.js", locals: {todo_items: todo_items, habit_items: habit_items} %>
+    <%= render :partial => "items/item_controller.js", locals: {todo_items: todo_items, habit_items: habit_items, user: current_user} %>
   </script>
   <div ng-app="Items">
     <div ng-controller="ItemController as vm">
@@ -11,9 +11,15 @@
             <p>
               <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)" style="margin:0px">&nbsp;
               {{todo.title}}&nbsp;
-              <a href="#" ng-click="vm.scheduleTodo(todo)">schedule</a>|
+              <a href="#" ng-click="vm.showScheduleView(todo)">schedule</a>|
               <a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
             </p>
+            <div ng-if="todo.schedule_view_open">
+              Start Date/Time<input type="datetime-local" ng-model="todo.schedule_start" ng-change="vm.updateScheduleEnd(todo)">
+              End Date/Time<input type="datetime-local" ng-model="todo.schedule_end">
+              <button ng-click="vm.scheduleTodo(todo)" type="button" class="button small">Schedule</button>
+              &nbsp;&nbsp;<a href="#" ng-click="vm.hideScheduleView(todo)">cancel</a>
+            </div>
             <hr>
           </span>
         </div>

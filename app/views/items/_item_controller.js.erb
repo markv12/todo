@@ -1,6 +1,6 @@
 (function () {
       'use strict';
-      var app = angular.module('Items', ['mm.foundation']);
+      var app = angular.module('Items', []);
       app.controller('ItemController', ItemController);
       ItemController.$inject = ['$http'];
       function ItemController($http) {
@@ -13,6 +13,9 @@
         vm.updateTodo = updateTodo;
         vm.addTodo = addTodo;
         vm.deleteTodo = deleteTodo;
+        vm.showScheduleView = showScheduleView;
+        vm.hideScheduleView = hideScheduleView;
+        vm.updateScheduleEnd = updateScheduleEnd;
         vm.scheduleTodo = scheduleTodo;
 
         function updateTodo(todo){
@@ -39,56 +42,69 @@
           });
         }
 
-        function scheduleTodo(todo_to_schedule){
-                // //secret DpNP4KhvwjLstcP8i-OTfKB8
-                // var clientId = '976525523411-msu9ft0cmibf5ulf4r2rrfvqvj1iatsq.apps.googleusercontent.com';
-                // var apiKey = 'AIzaSyDjaMTmqnhVGQnkHisPYccnmIlVyyNJ68o';
-                // var scopes = 'https://www.googleapis.com/auth/calendar';
-                // gapi.client.setApiKey(apiKey);
-                // window.setTimeout(checkAuth,1);
-                // function checkAuth() {
-                //   gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false},
-                //       handleAuthResult);
-                // }
-                // function handleAuthResult(authResult) {
-                //   if (authResult) {
-                //     addToCalendar(todo_to_schedule);
-                //   }
-                // }
+        function showScheduleView(todo){
+          todo.schedule_view_open = true;
+        }
+        function hideScheduleView(todo){
+          todo.schedule_view_open = false;
+        }
 
-                // function addToCalendar(todo_to_schedule) {
-                //   gapi.client.load('calendar', 'v3', function() {
-                //     var event = {
-                //       'summary': todo_to_schedule.title,
-                //       'location': 'My Place',
-                //       'description': 'A chance to hear more about Google\'s developer products.',
-                //       'start': {
-                //         'dateTime': '2015-11-30T09:00:00-07:00',
-                //         'timeZone': 'America/Los_Angeles'
-                //       },
-                //       'end': {
-                //         'dateTime': '2015-11-30T17:00:00-07:00',
-                //         'timeZone': 'America/Los_Angeles'
-                //       },
-                //       'attendees': [
-                //         {'email': 'swsteffes@gmail.com'}
-                //       ],
-                //       'reminders': {
-                //         'useDefault': false
-                //       }
-                //     };
-                //     var request = gapi.client.calendar.events.insert({
-                //       'calendarId': 'primary',
-                //       'resource': event
-                //     });
-                //     request.execute(function(resp) {
-                //       debugger;
-                //       if(resp.status === 'confirmed'){
+        function updateScheduleEnd(todo){
+          if(!todo.schedule_end && todo.schedule_start){
+            todo.schedule_end = todo.schedule_start;
+          }
+        }
 
-                //       }
-                //     });
-                //   });
-                // }
+        function scheduleTodo(todo){
+          if(todo.schedule_start && todo.schedule_end){
+            //secret DpNP4KhvwjLstcP8i-OTfKB8
+            var clientId = '976525523411-msu9ft0cmibf5ulf4r2rrfvqvj1iatsq.apps.googleusercontent.com';
+            var apiKey = 'AIzaSyDjaMTmqnhVGQnkHisPYccnmIlVyyNJ68o';
+            var scopes = 'https://www.googleapis.com/auth/calendar';
+            gapi.client.setApiKey(apiKey);
+            window.setTimeout(checkAuth,1);
+            function checkAuth() {
+              gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false},
+                  handleAuthResult);
+            }
+            function handleAuthResult(authResult) {
+              if (authResult) {
+                addToCalendar(todo);
+              }
+            }
+
+            function addToCalendar(todo) {
+              gapi.client.load('calendar', 'v3', function() {
+                var event = {
+                  'summary': todo.title,
+                  'location': 'My Place',
+                  'description': 'todo.description',
+                  'start': {
+                    'dateTime': todo.schedule_start,
+                  },
+                  'end': {
+                    'dateTime': todo.schedule_end,
+                  },
+                  'attendees': [
+                    {'email': '<%= user.email %>'}
+                  ],
+                  'reminders': {
+                    'useDefault': false
+                  }
+                };
+                var request = gapi.client.calendar.events.insert({
+                  'calendarId': 'primary',
+                  'resource': event
+                });
+                request.execute(function(resp) {
+                  if(resp.status === 'confirmed'){
+                    alert("Todo Scheduled");
+                  }
+                  todo.schedule_view_open = false;
+                });
+              });
+            }
+          }
         }
       };
     })();
