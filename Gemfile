@@ -33,6 +33,7 @@ gem 'authlogic'
 gem 'foundation-rails'
 gem 'angularjs-rails'
 gem 'angularjs-foundation-rails'
+gem 'font-awesome-rails'
 
 group :test, :development do
   gem 'pry'

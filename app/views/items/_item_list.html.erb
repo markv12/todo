@@ -1,17 +1,12 @@
   <script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
   <script>
-    <%= render :partial => "items/calendar_modal_controller.js" %>
-  </script>
-  <script>
     <%= render :partial => "items/item_controller.js", locals: {todo_items: todo_items, habit_items: habit_items} %>
   </script>
   <div ng-app="Items">
     <div ng-controller="ItemController as vm">
-    <script type="text/ng-template" id="modal.html">
-      <%= render partial: "items/modal" %>
-    </script>
       <div class="large-6 columns">
         <div class="panel" style="text-align:left">
+          <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
           <span ng-repeat="todo in vm.todo_items | orderBy:'-created_at'">
             <p>
               <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)" style="margin:0px">&nbsp;
