@@ -1,7 +1,7 @@
 desc "This task is called by the Heroku scheduler add-on"
 task :update_habits => :environment do
   puts "Updating habits..."
-  HabitItem.each do |habit_item|
+  HabitItem.all.each do |habit_item|
   	habit_item.daily_update
   	habit_item.save!
   end
