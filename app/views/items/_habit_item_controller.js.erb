@@ -9,6 +9,24 @@
 
         vm.addHabit = addHabit;
         vm.deleteHabit = deleteHabit;
+        vm.enterLogMode = enterLogMode;
+        vm.logAmount = logAmount;
+
+
+        function enterLogMode(habit){
+          habit.inLogMode = true;
+        }
+
+        function logAmount(habit){
+          var requestBody = {
+            amount: habit.amountToLog
+          }
+          $http.post("habit_item/" + habit.id + "/log_amount", requestBody).then(function(response){
+            habit.inLogMode = false;
+            habit.amountToLog = 0;
+            habit.amount_remaining = response.data.amount_remaining;
+          });
+        }
 
         function updateHabit(habit){
           $http.put("habit_item/"+habit.id, {completed: habit.completed});

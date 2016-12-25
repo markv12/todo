@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   post '/habit_item', to:'habit_item#create'
   delete '/habit_item/:id', to:'habit_item#delete'
+  post '/habit_item/:id/log_amount', to:'habit_item#log_amount'
   put '/habit_item/:id', to:'habit_item#update_habit'
 
   resources :user_sessions
