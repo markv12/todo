@@ -1,0 +1,3 @@
+var app = angular.module('Items', []);
+<%= render :partial => "items/todo_item_controller.js", locals: {todo_items: todo_items, user: current_user} %>
+<%= render :partial => "items/habit_item_controller.js", locals: {habit_items: habit_items, user: current_user} %>

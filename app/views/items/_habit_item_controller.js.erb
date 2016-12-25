@@ -1,0 +1,39 @@
+(function () {
+      'use strict';
+      angular.module('Items').controller('HabitItemController', HabitItemController);
+      HabitItemController.$inject = ['$http'];
+      function HabitItemController($http) {
+        var vm = this;
+        vm.habit_items = <%= habit_items.to_json.html_safe %>;
+        vm.new_habit_item = {};
+
+        vm.addHabit = addHabit;
+        vm.deleteHabit = deleteHabit;
+
+        function updateHabit(habit){
+          $http.put("habit_item/"+habit.id, {completed: habit.completed});
+        }
+        function addHabit(){
+          var requestBody = {
+              title: vm.new_habit_item.title,
+              description: vm.new_habit_item.description,
+              unit_name: vm.new_habit_item.unit_name,
+              daily_amount: vm.new_habit_item.daily_amount,
+              authenticity_token: '<%= form_authenticity_token %>'
+            };
+            vm.is_loading = true;
+          $http.post("habit_item", requestBody).then(function(response){
+              vm.habit_items.push(response.data);
+              vm.new_habit_item = {};
+              vm.is_loading = false;
+            });
+        }
+        function deleteHabit(habit_to_delete){
+          $http.delete("/habit_item/"+habit_to_delete.id).then(function(response){
+            vm.habit_items = vm.habit_items.filter(function(item){
+              return item.id !== response.data.id;
+            });
+          });
+        }
+      };
+    })();

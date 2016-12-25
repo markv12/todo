@@ -1,5 +1,24 @@
 class HabitItemController < ApplicationController
 
+  def create
+    item = current_user.habit_items.new(habit_params)
+    item.amount_remaining = item.daily_amount
+    if item.save()
+      render json: item, :status => 200, :content_type => 'text/html'
+    else
+      render :nothing => true, :status => 403, :content_type => 'text/html'
+    end
+  end
+
+  def delete
+    item = HabitItem.find(params[:id])
+    if item.destroy
+      render json: item, :status => 200, :content_type => 'text/html'
+    else
+      render :nothing => true, :status => 500, :content_type => 'text/html'
+    end
+  end
+
   def update_habit
     item = HabitItem.find(params[:id]);
     if item.update(habit_params)

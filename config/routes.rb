@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post '/todo_item', to:'todo_item#create'
   delete '/todo_item/:id', to:'todo_item#delete'
 
+  post '/habit_item', to:'habit_item#create'
+  delete '/habit_item/:id', to:'habit_item#delete'
   put '/habit_item/:id', to:'habit_item#update_habit'
 
   resources :user_sessions

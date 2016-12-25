@@ -1,13 +1,11 @@
 (function () {
       'use strict';
-      var app = angular.module('Items', []);
-      app.controller('ItemController', ItemController);
-      ItemController.$inject = ['$http'];
-      function ItemController($http) {
+      angular.module('Items').controller('TodoItemController', TodoItemController);
+      TodoItemController.$inject = ['$http'];
+      function TodoItemController($http) {
         var vm = this;
         vm.todo_items = <%= todo_items.to_json.html_safe %>;
 
-        vm.habit_items = <%= habit_items.to_json.html_safe %>;
         vm.new_todo_item = {};
 
         vm.updateTodo = updateTodo;

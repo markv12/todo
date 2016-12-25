@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   has_many :todo_items
 
   acts_as_authentic do |c|
-    c.login_field = 'email'
+    c.login_field = :email
   end
 
 end
