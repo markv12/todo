@@ -30,7 +30,9 @@ class HabitItemController < ApplicationController
 
   def log_amount
     habit_item = HabitItem.find(params[:id])
-    habit_item.amount_remaining -= params[:amount]
+    if !params[:amount].nil?
+      habit_item.amount_remaining -= params[:amount]
+    end
     if habit_item.save()
       render json: habit_item, :status => 200, :content_type => 'text/html'
     else
@@ -41,5 +43,4 @@ class HabitItemController < ApplicationController
   def habit_params
     params.permit(:title, :description, :unit_name, :daily_amount, :amount_remaining)
   end
-
 end

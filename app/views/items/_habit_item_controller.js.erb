@@ -21,10 +21,12 @@
           var requestBody = {
             amount: habit.amountToLog
           }
+          vm.is_loading = true;
           $http.post("habit_item/" + habit.id + "/log_amount", requestBody).then(function(response){
             habit.inLogMode = false;
             habit.amountToLog = 0;
             habit.amount_remaining = response.data.amount_remaining;
+            vm.is_loading = false;
           });
         }
 

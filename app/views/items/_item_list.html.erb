@@ -37,20 +37,6 @@
     </div>
     <div ng-controller="HabitItemController as vm">
       <div class="large-6 columns">
-        <div class="panel">
-          <h5>Add New Habit</h5>
-          <form class="input-group" style="text-align:left">
-            <label>Title:</label>
-            <input ng-model="vm.new_habit_item.title" type="text">
-            <label>Unit:</label>
-            <input ng-model="vm.new_habit_item.unit_name" type="text">
-            <label>Daily Amount:</label>
-            <input type="number" ng-model="vm.new_habit_item.daily_amount">
-            <label>Description</label>
-            <textarea ng-model="vm.new_habit_item.description" type="text"></textarea>
-          </form>
-          <a href="#" ng-click="vm.addHabit()" class="button">Add</a>
-        </div>
         <div class="panel" style="text-align:left">
           <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
           <span ng-repeat="habit in vm.habit_items | orderBy:'-created_at'">
@@ -66,10 +52,25 @@
             <span ng-if="habit.inLogMode">
               <input type="number" style="width:75px; display:inline;" ng-model="habit.amountToLog">&nbsp;{{habit.unit_name}}
               <br>
-              <button ng-click="vm.logAmount(habit)" type="button" class="button">Log</button>
+              <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
+              <button ng-if="!vm.is_loading" ng-click="vm.logAmount(habit)" type="button" class="button">Log</button>
             </span>
             <hr>
           </span>
+        </div>
+        <div class="panel">
+          <h5>Add New Habit</h5>
+          <form class="input-group" style="text-align:left">
+            <label>Title:</label>
+            <input ng-model="vm.new_habit_item.title" type="text">
+            <label>Unit:</label>
+            <input ng-model="vm.new_habit_item.unit_name" type="text">
+            <label>Daily Amount:</label>
+            <input type="number" ng-model="vm.new_habit_item.daily_amount">
+            <label>Description</label>
+            <textarea ng-model="vm.new_habit_item.description" type="text"></textarea>
+          </form>
+          <a href="#" ng-click="vm.addHabit()" class="button">Add</a>
         </div>
       </div>
     </div>
