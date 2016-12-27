@@ -9,12 +9,22 @@
 
         vm.addHabit = addHabit;
         vm.deleteHabit = deleteHabit;
+        vm.updateHabit = updateHabit;
         vm.enterLogMode = enterLogMode;
+        vm.cancelLogMode = cancelLogMode;
+        vm.enterEditMode = enterEditMode;
         vm.logAmount = logAmount;
-
 
         function enterLogMode(habit){
           habit.inLogMode = true;
+        }
+
+        function cancelLogMode(habit){
+          habit.inLogMode = false;
+        }
+
+        function enterEditMode(habit){
+          habit.inEditMode = true;
         }
 
         function logAmount(habit){
@@ -48,12 +58,23 @@
               vm.is_loading = false;
             });
         }
-        function deleteHabit(habit_to_delete){
-          $http.delete("/habit_item/"+habit_to_delete.id).then(function(response){
-            vm.habit_items = vm.habit_items.filter(function(item){
-              return item.id !== response.data.id;
+
+        function updateHabit(habit_to_update){
+          vm.is_loading = true;
+          $http.put("habit_item/"+ habit_to_update.id, habit_to_update).then(function(response){
+              habit_to_update.inEditMode = false;
+              vm.is_loading = false;
             });
-          });
+        }
+
+        function deleteHabit(habit_to_delete){
+          if(confirm("Delete: " + habit_to_delete.name + "?")){
+            $http.delete("/habit_item/"+habit_to_delete.id).then(function(response){
+              vm.habit_items = vm.habit_items.filter(function(item){
+                return item.id !== response.data.id;
+              });
+            });
+          }
         }
       };
     })();

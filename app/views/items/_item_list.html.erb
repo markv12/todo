@@ -40,20 +40,39 @@
         <div class="panel" style="text-align:left">
           <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
           <span ng-repeat="habit in vm.habit_items | orderBy:'-created_at'">
-            <p ng-bind="habit.title"></p>
-            <p ng-bind="'Daily Amount: ' + habit.daily_amount + ' ' + habit.unit_name"></p>
-            <p ng-bind="'Amount Remaining: ' + habit.amount_remaining + ' ' + habit.unit_name"></p>
-            <span ng-if="!habit.inLogMode">
-              <a href="#" ng-click="vm.enterLogMode(habit)">Log Accomplishment</a>
-              <br>
-              <br>
-              <a href="#" ng-click="vm.deleteHabit(habit)">delete</a>
+            <span ng-if="!habit.inEditMode">
+              <p ng-bind="habit.title"></p>
+              <p ng-bind="'Daily Amount: ' + habit.daily_amount + ' ' + habit.unit_name"></p>
+              <p ng-bind="'Amount Remaining: ' + habit.amount_remaining + ' ' + habit.unit_name"></p>
+              <span ng-if="!habit.inLogMode">
+                <a href="#" ng-click="vm.enterLogMode(habit)">Log Accomplishment</a>&nbsp;| 
+                <a href="#" ng-click="vm.enterEditMode(habit)">edit</a>&nbsp;|
+                <a href="#" ng-click="vm.deleteHabit(habit)">delete</a>
+              </span>
+              <span ng-if="habit.inLogMode">
+                <input type="number" style="width:75px; display:inline;" ng-model="habit.amountToLog">&nbsp;{{habit.unit_name}}
+                <br>
+                <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
+                <button ng-if="!vm.is_loading" ng-click="vm.logAmount(habit)" type="button" class="button">Log</button>
+                <a href="#" ng-click="vm.cancelLogMode(habit)">cancel</a>
+              </span>
             </span>
-            <span ng-if="habit.inLogMode">
-              <input type="number" style="width:75px; display:inline;" ng-model="habit.amountToLog">&nbsp;{{habit.unit_name}}
-              <br>
-              <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
-              <button ng-if="!vm.is_loading" ng-click="vm.logAmount(habit)" type="button" class="button">Log</button>
+
+            <span ng-if="habit.inEditMode">
+              <h5>Edit Habit</h5>
+              <form class="input-group" style="text-align:left">
+                <label>Title:</label>
+                <input ng-model="habit.title" type="text">
+                <label>Unit:</label>
+                <input ng-model="habit.unit_name" type="text">
+                <label>Daily Amount:</label>
+                <input type="number" ng-model="habit.daily_amount">
+                <label>Amount Remaining:</label>
+                <input type="number" ng-model="habit.amount_remaining">
+                <label>Description</label>
+                <textarea ng-model="habit.description" type="text"></textarea>
+              </form>
+              <a href="#" ng-click="vm.updateHabit(habit)" class="button">Update</a>
             </span>
             <hr>
           </span>

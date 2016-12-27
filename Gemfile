@@ -4,6 +4,7 @@ ruby "2.3.1"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.10'
+gem 'activesupport-json_encoder' # restore ability to use encode_big_decimal_as_string = false
 # Use pg as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
