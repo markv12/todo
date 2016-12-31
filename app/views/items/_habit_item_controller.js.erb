@@ -68,7 +68,7 @@
         }
 
         function deleteHabit(habit_to_delete){
-          if(confirm("Delete: " + habit_to_delete.name + "?")){
+          if(confirm("Delete: " + habit_to_delete.title + "?")){
             $http.delete("/habit_item/"+habit_to_delete.id).then(function(response){
               vm.habit_items = vm.habit_items.filter(function(item){
                 return item.id !== response.data.id;
