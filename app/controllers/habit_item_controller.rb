@@ -29,11 +29,23 @@ class HabitItemController < ApplicationController
   end
 
   def log_amount
+    no_errors = true
     habit_item = HabitItem.find(params[:id])
     if !params[:amount].nil?
       habit_item.amount_remaining -= params[:amount]
+      habit_item.amount_remaining = [0, habit_item.amount_remaining].max
+      if habit_item.save()
+        new_entry = habit_item.habit_log_entries.new()
+        new_entry.amount_logged = params[:amount]
+        if !new_entry.save()
+          no_errors = false
+        end
+      else
+        no_errors = false
+      end
     end
-    if habit_item.save()
+
+    if no_errors
       render json: habit_item, :status => 200, :content_type => 'text/html'
     else
       render :nothing => true, :status => 403, :content_type => 'text/html'

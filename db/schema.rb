@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015025202) do
+ActiveRecord::Schema.define(version: 20170102135626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,13 @@ ActiveRecord::Schema.define(version: 20151015025202) do
     t.decimal  "daily_amount",         precision: 10, scale: 3
     t.decimal  "amount_remaining",     precision: 10, scale: 3
     t.datetime "last_amount_increase"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "habit_log_entries", force: true do |t|
+    t.integer  "habit_item_id"
+    t.decimal  "amount_logged", precision: 10, scale: 3
     t.datetime "created_at"
     t.datetime "updated_at"
   end

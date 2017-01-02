@@ -3,38 +3,6 @@
     <%= render :partial => "items/item_angular_app.js", locals: {todo_items: todo_items, habit_items: habit_items, user: current_user} %>
   </script>
   <div ng-app="Items">
-    <div ng-controller="TodoItemController as vm">
-      <div class="large-6 columns">
-        <div class="panel">
-          <h5>Add New Todo</h5>
-          <form class="input-group" style="text-align:left">
-            <label>Title:</label>
-            <input ng-model="vm.new_todo_item.title" type="text">
-            <label>Description</label>
-            <textarea ng-model="vm.new_todo_item.description" type="text"></textarea>
-          </form>
-          <a href="#" ng-click="vm.addTodo()" class="button">Add</a>
-        </div>
-        <div class="panel" style="text-align:left">
-          <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
-          <span ng-repeat="todo in vm.todo_items | orderBy:'-created_at'">
-            <p>
-              <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)" style="margin:0px">&nbsp;
-              {{todo.title}}&nbsp;
-              <a href="#" ng-click="vm.showScheduleView(todo)">schedule</a>|
-              <a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
-            </p>
-            <div ng-if="todo.schedule_view_open">
-              Start Date/Time<input type="datetime-local" ng-model="todo.schedule_start" ng-change="vm.updateScheduleEnd(todo)">
-              End Date/Time<input type="datetime-local" ng-model="todo.schedule_end">
-              <button ng-click="vm.scheduleTodo(todo)" type="button" class="button small">Schedule</button>
-              &nbsp;&nbsp;<a href="#" ng-click="vm.hideScheduleView(todo)">cancel</a>
-            </div>
-            <hr>
-          </span>
-        </div>
-      </div>
-    </div>
     <div ng-controller="HabitItemController as vm">
       <div class="large-6 columns">
         <div class="panel" style="text-align:left">
@@ -90,6 +58,38 @@
             <textarea ng-model="vm.new_habit_item.description" type="text"></textarea>
           </form>
           <a href="#" ng-click="vm.addHabit()" class="button">Add</a>
+        </div>
+      </div>
+    </div>
+    <div ng-controller="TodoItemController as vm">
+      <div class="large-6 columns">
+        <div class="panel" style="text-align:left">
+          <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
+          <span ng-repeat="todo in vm.todo_items | orderBy:'-created_at'">
+            <p>
+              <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)" style="margin:0px">&nbsp;
+              {{todo.title}}&nbsp;
+              <a href="#" ng-click="vm.showScheduleView(todo)">schedule</a>|
+              <a href="#" ng-click="vm.deleteTodo(todo)">delete</a>
+            </p>
+            <div ng-if="todo.schedule_view_open">
+              Start Date/Time<input type="datetime-local" ng-model="todo.schedule_start" ng-change="vm.updateScheduleEnd(todo)">
+              End Date/Time<input type="datetime-local" ng-model="todo.schedule_end">
+              <button ng-click="vm.scheduleTodo(todo)" type="button" class="button small">Schedule</button>
+              &nbsp;&nbsp;<a href="#" ng-click="vm.hideScheduleView(todo)">cancel</a>
+            </div>
+            <hr>
+          </span>
+        </div>
+        <div class="panel">
+          <h5>Add New Todo</h5>
+          <form class="input-group" style="text-align:left">
+            <label>Title:</label>
+            <input ng-model="vm.new_todo_item.title" type="text">
+            <label>Description</label>
+            <textarea ng-model="vm.new_todo_item.description" type="text"></textarea>
+          </form>
+          <a href="#" ng-click="vm.addTodo()" class="button">Add</a>
         </div>
       </div>
     </div>
