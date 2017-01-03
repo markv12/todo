@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'impulse.min'%>
 
 <% if current_user %>
-  <p>Logged In!</p>
+  <%= render partial:'/items/item_list', locals: {todo_items: current_user.todo_items, habit_items: current_user.habit_items} %>
 <% else %>
   <div class="main_content centered">
     <br/>
