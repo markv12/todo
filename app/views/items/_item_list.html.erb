@@ -63,9 +63,9 @@
     </div>
     <div ng-controller="TodoItemController as vm">
       <div class="large-6 columns">
-        <div class="panel" style="text-align:left">
+        <div class="panel" style="text-align:left" ng-repeat="item_list in vm.item_lists">
           <div ng-if="vm.is_loading" style="font-size:18px"><i class="fa fa-refresh fa-spin"></i><hr></div>
-          <span ng-repeat="todo in vm.todo_items | orderBy:'-created_at'">
+          <span ng-repeat="todo in item_list | orderBy:'-created_at'">
             <p>
               <input type="checkbox" ng-model="todo.completed" ng-change="vm.updateTodo(todo)" style="margin:0px">&nbsp;
               {{todo.title}}&nbsp;

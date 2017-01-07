@@ -5,7 +5,13 @@
       function TodoItemController($http) {
         var vm = this;
         vm.todo_items = <%= todo_items.to_json.html_safe %>;
-
+        vm.uncompleted_todo_items = vm.todo_items.filter(function(item){
+          return !item.completed;
+        });
+        vm.completed_todo_items = vm.todo_items.filter(function(item){
+          return item.completed;
+        });
+        vm.item_lists = [vm.uncompleted_todo_items, vm.completed_todo_items];
         vm.new_todo_item = {};
 
         vm.updateTodo = updateTodo;
@@ -15,9 +21,13 @@
         vm.hideScheduleView = hideScheduleView;
         vm.updateScheduleEnd = updateScheduleEnd;
         vm.scheduleTodo = scheduleTodo;
+        vm.removeItemFromArray = removeItemFromArray;
 
         function updateTodo(todo){
-          $http.put("todo_item/"+todo.id, {completed: todo.completed});
+          vm.is_loading = true;
+          $http.put("todo_item/"+todo.id, {completed: todo.completed}).then(function(response){
+              vm.is_loading = false;
+          });
         }
         function addTodo(){
           var requestBody = {
@@ -27,17 +37,18 @@
             };
             vm.is_loading = true;
           $http.post("todo_item", requestBody).then(function(response){
-              vm.todo_items.push(response.data);
+              vm.uncompleted_todo_items.push(response.data);
               vm.new_todo_item = {};
               vm.is_loading = false;
             });
         }
         function deleteTodo(todo_to_delete){
-          $http.delete("/todo_item/"+todo_to_delete.id).then(function(response){
-            vm.todo_items = vm.todo_items.filter(function(item){
-              return item.id !== response.data.id;
+          if(confirm("Delete: " + todo_to_delete.title + "?")){
+            $http.delete("/todo_item/"+todo_to_delete.id).then(function(response){
+              vm.removeItemFromArray(response.data.id, vm.uncompleted_todo_items);
+              vm.removeItemFromArray(response.data.id, vm.completed_todo_items);
             });
-          });
+          }
         }
 
         function showScheduleView(todo){
@@ -50,6 +61,18 @@
         function updateScheduleEnd(todo){
           if(!todo.schedule_end && todo.schedule_start){
             todo.schedule_end = todo.schedule_start;
+          }
+        }
+
+        function removeItemFromArray(id, array){
+          var matchingIndex = -1;
+          for (var i = 0; i < array.length; i++) { 
+              if(id === array[i].id){
+                matchingIndex = i;
+              }
+          }
+          if(matchingIndex !== -1){
+            array.splice(matchingIndex, 1);
           }
         }
 
